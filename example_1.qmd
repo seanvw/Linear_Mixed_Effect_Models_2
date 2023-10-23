@@ -1,0 +1,140 @@
+---
+title: "Example_1"
+---
+
+## Introduction
+
+Some examples of using "flexplot" and "lmer" based on explanations from Dustin Fife ([Video Link](https://www.youtube.com/watch?v=eVuQlGDZxHs&list=PL8F480DgtpW9_IT7xN1XeRF_dglZmK0nM&index=2)). Modified with tidyverse packages and plots (ggplot) to enable additional data understanding. My annotations and observations in line with code. Wrapped up in a Quarto package.
+
+## Example 1
+
+```{r}
+require(flexplot)
+require(lme4)
+require(dplyr)
+```
+
+### Data about alcohol use in teenagers is distributed with flexplot.
+
+```{r}
+data(alcuse)
+# see some data
+head(alcuse, 10)
+# rows
+paste0(nrow(alcuse), " rows of data.")
+# number of groups and data points
+alcuse_sum <- alcuse %>% group_by(ID) %>% 
+  summarise(mean = mean(ALCUSE), n_ALCUSE = n()) %>% print(n = 20)
+```
+
+```{r}
+# number of groups check 
+# 3 measures for each ID
+nrow(filter(alcuse_sum, n_ALCUSE == 3))
+
+```
+
+##### Comments
+
+There are 3 meausurements of ALCUSE for each of 82 IDs
+
+```{r}
+summary(alcuse)
+
+```
+
+### Model of alcohol use. No predictors.
+
+```{r}
+# Fixed effect + random effects
+# Fixed effect: ~1 is gammma 00
+# Random effects: 1 is Uij for ID 
+mod = lmer(ALCUSE~1 + (1|ID), data=alcuse)
+visualize(mod, plot = "model", sample = 20)
+summary(mod)
+
+```
+
+##### Comments
+
+Dustin's model visualize() plot does not look like this one despite the code being identical.
+
+The visualize function defaults to 3 random IDs (?). I change it (with sample = n)
+
+Looks like Dustin's data is normalized to 1
+
+Dustin gets Fixed Effect and Random Effects plotted. I just get: object (lmerMod).
+
+However the summary(mod) is identical to Dustin's.
+
+```{r}
+# always useful to look this way
+summary(mod)
+```
+
+##### Comments
+
+The model Intercept 0.9220 is simply the mean of the ALCUSE variable
+
+```{r}
+signif(mean(alcuse$ALCUSE),4)
+
+```
+
+### Random intercepts model
+
+```{r}
+# random intercepts using AGE_14 as predictor for fixed IDs
+# AGE_14 predictor (fixed gradients)
+# (1|ID) tells intercepts may vary (random intercepts)
+rand.i <- lmer(ALCUSE~1 + AGE_14 + (1|ID), data = alcuse)
+# by default 3 IDs are plotted
+sample_n <- 6
+# if all groups are plotted, one gets funny comments :)
+# very nice humour
+# sample_n <- 82
+visualize(rand.i, plot = "model", sample=sample_n)
+summary(rand.i)
+
+```
+
+##### Comments
+
+Fixed effect (Intercept) means 0.65130 drinks on average at age 14.
+
+For subsequent years the number of drinks increases on average by 0.27065.
+
+### Random slopes (gradient) model
+
+```{r}
+# unrealistic 
+# -1 means intercept is fixed
+# need to consider the level 1 and 2 models to specify the syntax correctly
+rand.s <- lmer(ALCUSE~1 + AGE_14 + (-1 + AGE_14|ID), data = alcuse)
+sample_n <- 10
+visualize(rand.s, plot = "model", sample=sample_n)
+summary(rand.s)
+```
+
+##### Comments
+
+Despite the warning, visulaize seems to do the job with 10 samples
+
+### Random slopes and intercepts model
+
+```{r}
+# probably what we want
+# need to consider the level 1 and 2 models to specify the syntax correctly
+rand.is <- lmer(ALCUSE~1 + AGE_14 + (AGE_14|ID), data = alcuse)
+sample_n <- 10
+visualize(rand.is, plot = "model", sample=sample_n)
+summary(rand.is)
+```
+
+##### Comments
+
+-   NA
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
