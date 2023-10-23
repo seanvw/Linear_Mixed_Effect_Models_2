@@ -1,5 +1,5 @@
 ---
-title: "Example_1"
+title: "Example #1"
 ---
 
 ## Introduction
@@ -36,7 +36,7 @@ nrow(filter(alcuse_sum, n_ALCUSE == 3))
 
 ##### Comments
 
-There are 3 meausurements of ALCUSE for each of 82 IDs
+There are 3 measurements of ALCUSE for each of 82 IDs
 
 ```{r}
 summary(alcuse)
@@ -118,7 +118,7 @@ summary(rand.s)
 
 ##### Comments
 
-Despite the warning, visulaize seems to do the job with 10 samples
+Despite the warning, visualize seems to do the job with 10 samples
 
 ### Random slopes and intercepts model
 

@@ -1,5 +1,5 @@
 ---
-title: "Linear_Mixed_Effect_Models_2"
+title: "Linear Mixed Effect Models"
 ---
 
-Linear_Mixed_Effect_Models examples.
+Some reference examples of Linear Mixed Effect Models otherwise known as...
