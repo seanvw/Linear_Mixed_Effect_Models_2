@@ -1,5 +1,5 @@
 ---
-title: "Linear Mixed Effect Models"
+title: "Linear Mixed-Effect Models"
 ---
 
-Some reference examples of Linear Mixed Effect Models otherwise known as...
+Some reference examples of Linear Mixed-Effect Models (LMMs or just MMs for short) otherwise known as Hierarchical Linear Models (HLMs) or Multi Level Models.
