@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/example_1.html</loc>
-    <lastmod>2023-10-24T10:26:56.910Z</lastmod>
-  </url>
-  <url>
-    <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/index.html</loc>
-    <lastmod>2023-10-24T10:26:50.917Z</lastmod>
+    <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/example_2.html</loc>
+    <lastmod>2023-10-25T11:32:26.835Z</lastmod>
   </url>
   <url>
     <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/about.html</loc>
-    <lastmod>2023-10-24T10:26:51.268Z</lastmod>
+    <lastmod>2023-10-25T11:32:14.027Z</lastmod>
+  </url>
+  <url>
+    <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/index.html</loc>
+    <lastmod>2023-10-25T11:32:13.649Z</lastmod>
+  </url>
+  <url>
+    <loc>https://seanvw.github.io/Linear_Mixed_Effect_Models_2/example_1.html</loc>
+    <lastmod>2023-10-25T11:32:19.610Z</lastmod>
   </url>
 </urlset>
