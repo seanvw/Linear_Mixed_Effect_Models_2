@@ -75,18 +75,6 @@ Fixed effect is very clear with individual schools being close to parallel
 
 ```{r}
 # no predictor
-mod_baseline <- lmer(MathAch~1 + (1|School), data=math)
-visualize(mod_baseline, plot = "model", sample = 12)
-summary(mod_baseline)
-# SES as fixed and random effect
-mod_ses <- lmer(MathAch~SES + (SES|School), data=math)
-visualize(mod_ses, plot = "model", sample = 6)
-summary(mod_ses)
-
-```
-
-```{r}
-# no predictor
 model.comparison(mod_baseline, mod_ses)
 ```
 
@@ -94,4 +82,4 @@ model.comparison(mod_baseline, mod_ses)
 
 Bayes Factor favors mod_ses and great p value
 
-to be continues
+to be continued...
