@@ -1,0 +1,97 @@
+---
+title: "Example #2"
+---
+
+## Introduction
+
+Compare models with fresh data
+
+## Example #2
+
+```{r}
+require(flexplot)
+require(lme4)
+require(dplyr)
+require(ggplot2)
+```
+
+### First look at the data
+
+```{r}
+data(math)
+head(math,10)
+glimpse(math)
+math %>% group_by(Minority, Sex) %>% summarise(.groups = "keep")
+math %>% group_by(School) %>% summarise(.groups = "keep")
+summary(math)
+
+```
+
+#### Comments
+
+-   So we have 160 schools with two genders classified as minority or not.
+
+-   SES and MEANSES look like distributions centered around 0
+
+-   MathAch is centered around \~13 and has -ve scores !
+
+-   Do some plots...
+
+```{r}
+# plots 
+ggplot(math, aes(MathAch)) +
+  geom_histogram(binwidth = 0.1)
+
+ggplot(math, aes(SES)) +
+  geom_histogram(binwidth = 0.05)
+
+ggplot(math, aes(MEANSES)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+### Meanings and models
+
+-   SES is Socio Economic Staus or Score?
+
+-   MEANSES is ?
+
+-   MathAch is achievement in Math?
+
+```{r}
+# no predictor
+mod_baseline <- lmer(MathAch~1 + (1|School), data=math)
+visualize(mod_baseline, plot = "model", sample = 12)
+summary(mod_baseline)
+# SES as fixed and random effect
+mod_ses <- lmer(MathAch~SES + (SES|School), data=math)
+visualize(mod_ses, plot = "model", sample = 6)
+summary(mod_ses)
+
+```
+
+#### Comments
+
+Fixed effect is very clear with individual schools being close to parallel
+
+```{r}
+# no predictor
+mod_baseline <- lmer(MathAch~1 + (1|School), data=math)
+visualize(mod_baseline, plot = "model", sample = 12)
+summary(mod_baseline)
+# SES as fixed and random effect
+mod_ses <- lmer(MathAch~SES + (SES|School), data=math)
+visualize(mod_ses, plot = "model", sample = 6)
+summary(mod_ses)
+
+```
+
+```{r}
+# no predictor
+model.comparison(mod_baseline, mod_ses)
+```
+
+#### Comments
+
+Bayes Factor favors mod_ses and great p value
+
+to be continues
