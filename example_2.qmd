@@ -29,13 +29,13 @@ summary(math)
 
 #### Comments
 
--   So we have 160 schools with two genders classified as minority or not.
+-   From the above, we have 160 schools with two genders classified as minority or not.
 
 -   SES and MEANSES look like distributions centered around 0
 
--   MathAch is centered around \~13 and has -ve scores !
+-   MathAch is centered around \~13 and has -ve scores! Curious how one can attain a negative achievement score in Math: must be somehow a normalized variable.
 
--   Do some plots...
+-   Do some plots to look more closely at distributions
 
 ```{r}
 # plots 
@@ -49,37 +49,184 @@ ggplot(math, aes(MEANSES)) +
   geom_histogram(binwidth = 0.01)
 ```
 
-### Meanings and models
+### Variable Meanings
 
--   SES is Socio Economic Staus or Score?
+-   SES is Socio-Economic Status or Score?
 
 -   MEANSES is ?
 
 -   MathAch is achievement in Math?
+
+### No predictor model
 
 ```{r}
 # no predictor
 mod_baseline <- lmer(MathAch~1 + (1|School), data=math)
 visualize(mod_baseline, plot = "model", sample = 12)
 summary(mod_baseline)
+```
+
+### First model with predictors: fixed and random effects
+
+```{r}
 # SES as fixed and random effect
 mod_ses <- lmer(MathAch~SES + (SES|School), data=math)
 visualize(mod_ses, plot = "model", sample = 6)
 summary(mod_ses)
-
 ```
 
 #### Comments
 
-Fixed effect is very clear with individual schools being close to parallel
+Fixed effect is very clear with individual schools being close to parallel to fixed effect
+
+### Compare baseline and first model
 
 ```{r}
-# no predictor
+# compare models
 model.comparison(mod_baseline, mod_ses)
 ```
 
 #### Comments
 
-Bayes Factor favors mod_ses and great p value
+-   Bayes Factor favors mod_ses and great p value
 
-to be continued...
+-   R\^2 change (by using mod_ses that has SES predictor):
+
+    -   explains 5.92 % of the residual variance. Difference between fitted models for each cluster (in this case, each school).
+
+    -   43.94 % of variance in intercept (relative to the mod_base that has no predictor - juts the mean of every data point)
+
+-   Visualize that....
+
+```{r}
+# see the difference with 3 example schools
+compare.fits(MathAch~SES | School, mod_baseline, mod_ses, data = math)
+```
+
+#### Comments
+
+-   Plots are narrow
+
+-   sample=n is not observed
+
+### A better model? Let's see
+
+```{r}
+# a better model including Minority?
+mod_ses_minority <- lmer(MathAch~SES + Minority + (SES|School), data=math)
+visualize(mod_ses_minority, plot = "model", sample = 6)
+summary(mod_ses_minority)
+
+```
+
+-   Compare ...
+
+```{r}
+# better model?
+# compare models
+model.comparison(mod_baseline, mod_ses_minority)
+```
+
+-   Bayes Factor is much better: 3.917437e+138 vs 4.605423e+97
+
+-   R\^2 change (by using mod_ses_minority that has SES and Minority predictors):
+
+    -   explains 8.05 % of the residual variance. Difference between fitted models for each cluster (in this case, each school) vs \~6%
+
+    -   54.31 % of variance in intercept (relative to the mod_base that has no predictor - just the mean of every data point)
+
+-   Visualize that....
+
+```{r}
+# see the difference with 3 example schools
+compare.fits(MathAch~SES | Minority + School, mod_baseline, mod_ses_minority, data = math)
+```
+
+## What about a regular linear models
+
+-   some additional ggplots will help with understanding variables
+
+```{r}
+# it's a factor
+math$School <- as.factor(math$School)
+```
+
+### 1 Predictor
+
+```{r}
+# SES with Minority colouring
+ggplot(math, aes(x=SES, y=MathAch, colour=Minority)) + 
+  geom_point(size=0.1) + 
+  geom_smooth(method = "lm", formula = 'y ~ x', se = TRUE, color="blue")
+
+# model 1 factor 
+lm1 <- lm(MathAch ~ SES, data = math)
+summary(lm1)
+visualize(lm1, plot="model")
+visualize(lm1, plot="residuals")
+
+```
+
+#### Comments
+
+-   It's not obvious from the scatter-plot points that SES will be a good predictor - though regression line with SE shows the correlation.
+
+-   MinorityYes points can be seen emerging in bottom left - less SES \~ less MathAch
+
+-   SES is highly significant though the Adjusted R-squared is small (0.13)
+
+### 2 Predictors
+
+```{r}
+# Belt and braces: Minority box and violin
+ggplot(math, aes(x=Minority, y=MathAch, colour=Minority)) + 
+  geom_violin() + 
+  geom_jitter(shape=16, position=position_jitter(0.4), size=0.3) +
+  geom_boxplot(width=0.1, colour="black") 
+
+# 2 factors
+lm2 <- lm(MathAch ~ SES + Minority, data = math)
+summary(lm2)
+visualize(lm2, plot="model")
+visualize(lm2, plot="residuals")
+
+```
+
+#### Comments
+
+-   Box Violin plot show clearly the effect of Minority
+
+-   Median is about 5 points down for Yes
+
+### Down the rabbit hole
+
+```{r}
+# interesting 
+# what does this mean?
+lm3 <- lm(MathAch ~ SES + Minority + School, data = math)
+summary(lm3)
+```
+
+#### Comments
+
+-   Does this mean that the model with SES + Minority is better for some schools
+
+### Compare models
+
+```{r}
+# compare standard 1 and 2 predictor models
+model.comparison(lm1, lm2)
+```
+
+#### Comments
+
+-   lm2 better than 1
+
+```{r}
+# compare the standard 2 predictor model with the MM with 2 predictors 
+model.comparison(lm2, mod_ses_minority)
+```
+
+#### Comments
+
+-   MM better than standard 2 predictor variable model?
