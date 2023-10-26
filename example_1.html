@@ -494,10 +494,6 @@ AGE_14 -0.608</code></pre>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>sample_n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">visualize</span>(rand.is, <span class="at">plot =</span> <span class="st">"model"</span>, <span class="at">sample=</span>sample_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning in compare.fits(formula, data = data, model1 = object, re = T, return.preds = T, : Some of the model's predicted values are beyond the range of the original y-values. 
-              I'm truncating the y-axis to preserve the original scale.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>It looks like you're trying to plot more than 6 colors/lines/symbols.
 I gotta give it to you...you're ambitious. Alas, I can't do that, so I'm removing the colors/lines/symbols.
  I hope we can still be friends.</code></pre>
@@ -505,7 +501,7 @@ I gotta give it to you...you're ambitious. Alas, I can't do that, so I'm removin
 <div class="cell-output-display">
 <p><img src="example_1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rand.is)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rand.is)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: ALCUSE ~ 1 + AGE_14 + (AGE_14 | ID)
