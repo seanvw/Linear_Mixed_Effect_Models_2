@@ -345,7 +345,7 @@ $ MEANSES  &lt;dbl&gt; -0.428, -0.428, -0.428, -0.428, -0.428, -0.428, -0.428, -
 <h3 class="anchored" data-anchor-id="variable-meanings">Variable Meanings</h3>
 <ul>
 <li><p>SES is Socio-Economic Status or Score?</p></li>
-<li><p>MEANSES is ?</p></li>
+<li><p>MEANSES is presumable the mean of SES that is already calculated for each school ID</p></li>
 <li><p>MathAch is achievement in Math?</p></li>
 </ul>
 </section>
@@ -671,209 +671,71 @@ F-statistic:   691 on 2 and 7182 DF,  p-value: &lt; 2.2e-16</code></pre>
 <ul>
 <li><p>Box Violin plot show clearly the effect of Minority</p></li>
 <li><p>Median is about 5 points down for Yes</p></li>
+<li><p>SES and Minority together are better predictors</p></li>
+<li><p>How to visualize a model using 2 or more indepandant variables?</p>
+<ul>
+<li>look at this nice example plucked from the interweb</li>
+</ul></li>
 </ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read dataset</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> mtcars</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create multiple linear model</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl <span class="sc">+</span> hp, <span class="at">data=</span>df)</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(lm_fit)</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="co"># save predictions of the model in the new data frame </span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="co"># together with variable you want to plot against</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>predicted_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mpg_pred =</span> <span class="fu">predict</span>(lm_fit, df), <span class="at">hp=</span>df<span class="sc">$</span>hp)</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the predicted line of multiple linear regression</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> hp)) <span class="sc">+</span> </span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>) <span class="sc">+</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">'red'</span>,<span class="at">data =</span> predicted_df, <span class="fu">aes</span>(<span class="at">x=</span>mpg_pred, <span class="at">y=</span>hp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="example_2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ul>
+<li><p>And now the same approach for the 2 factor model, lm2:</p>
+<ul>
+<li>lm2 &lt;- lm(MathAch ~ SES + Minority, data = math)</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save predictions of the model in the new data frame </span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># together with variable you want to plot against</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>predicted_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">MathArc_pred =</span> <span class="fu">predict</span>(lm2, math), <span class="at">SES=</span>math<span class="sc">$</span>SES)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># this is the predicted line of multiple linear regression</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> math, <span class="fu">aes</span>(<span class="at">x =</span> SES, <span class="at">y =</span> MathAch)) <span class="sc">+</span> </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">'blue'</span>,<span class="at">size=</span><span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">'red'</span>,<span class="at">linewidth=</span><span class="fl">0.1</span>, <span class="at">data =</span> predicted_df, <span class="fu">aes</span>(<span class="at">x=</span>SES, <span class="at">y=</span>MathArc_pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="example_2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 </section>
 <section id="down-the-rabbit-hole" class="level3">
 <h3 class="anchored" data-anchor-id="down-the-rabbit-hole">Down the rabbit hole</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interesting </span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># what does this mean?</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(MathAch <span class="sc">~</span> SES <span class="sc">+</span> Minority <span class="sc">+</span> School, <span class="at">data =</span> math)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = MathAch ~ SES + Minority + School, data = math)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--18.9965  -4.3088   0.1334   4.4711  18.2567 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 10.81000    0.87795  12.313  &lt; 2e-16 ***
-SES          1.95248    0.10886  17.935  &lt; 2e-16 ***
-MinorityYes -2.89558    0.22012 -13.155  &lt; 2e-16 ***
-School1288   2.81085    1.48902   1.888 0.059104 .  
-School1296   0.49199    1.24892   0.394 0.693640    
-School1308   5.57282    1.61018   3.461 0.000541 ***
-School1317   3.80479    1.24592   3.054 0.002268 ** 
-School1358   0.72419    1.40520   0.515 0.606316    
-School1374  -0.12613    1.43670  -0.088 0.930045    
-School1433   7.60171    1.34748   5.641 1.75e-08 ***
-School1436   6.20255    1.26525   4.902 9.69e-07 ***
-School1461   4.79767    1.37016   3.502 0.000465 ***
-School1462   3.83734    1.20007   3.198 0.001392 ** 
-School1477   3.24700    1.16411   2.789 0.005297 ** 
-School1499  -0.98336    1.20658  -0.815 0.415098    
-School1637  -0.37097    1.45751  -0.255 0.799100    
-School1906   4.44741    1.20859   3.680 0.000235 ***
-School1909   3.12897    1.43663   2.178 0.029440 *  
-School1942   6.06915    1.42424   4.261 2.06e-05 ***
-School1946   2.38751    1.30269   1.833 0.066882 .  
-School2030   0.81185    1.24249   0.653 0.513516    
-School2208   3.76844    1.17430   3.209 0.001338 ** 
-School2277   2.20629    1.17595   1.876 0.060674 .  
-School2305   4.31984    1.15904   3.727 0.000195 ***
-School2336   4.90714    1.24332   3.947 8.00e-05 ***
-School2458   4.50892    1.19320   3.779 0.000159 ***
-School2467  -0.01869    1.20976  -0.015 0.987673    
-School2526   5.65551    1.18695   4.765 1.93e-06 ***
-School2626   2.71321    1.31177   2.068 0.038643 *  
-School2629   4.97612    1.18502   4.199 2.71e-05 ***
-School2639   0.58408    1.29171   0.452 0.651155    
-School2651   0.30360    1.31220   0.231 0.817034    
-School2655   5.24387    1.21972   4.299 1.74e-05 ***
-School2658   2.30922    1.25763   1.836 0.066375 .  
-School2755   5.62819    1.24681   4.514 6.46e-06 ***
-School2768   0.41322    1.48829   0.278 0.781292    
-School2771   1.74953    1.19394   1.465 0.142873    
-School2818   2.91961    1.27746   2.285 0.022315 *  
-School2917   1.42105    1.28149   1.109 0.267510    
-School2990   8.29000    1.24760   6.645 3.26e-11 ***
-School2995  -0.10831    1.24685  -0.087 0.930778    
-School3013   1.94181    1.20491   1.612 0.107098    
-School3020   3.23409    1.17720   2.747 0.006024 ** 
-School3039   6.57803    1.58172   4.159 3.24e-05 ***
-School3088   0.96627    1.30646   0.740 0.459565    
-School3152   2.56117    1.21064   2.116 0.034418 *  
-School3332   2.27427    1.31591   1.728 0.083981 .  
-School3351   0.83517    1.30559   0.640 0.522396    
-School3377   2.15776    1.26629   1.704 0.088426 .  
-School3427   8.96138    1.22881   7.293 3.37e-13 ***
-School3498   4.51124    1.21000   3.728 0.000194 ***
-School3499   2.88351    1.31803   2.188 0.028721 *  
-School3533   1.00773    1.23591   0.815 0.414885    
-School3610   5.17004    1.15742   4.467 8.06e-06 ***
-School3657   0.03545    1.21557   0.029 0.976734    
-School3688   3.12280    1.27146   2.456 0.014071 *  
-School3705   0.54347    1.25997   0.431 0.666239    
-School3716   2.00438    1.28860   1.555 0.119880    
-School3838   6.14873    1.20328   5.110 3.31e-07 ***
-School3881   1.17256    1.28580   0.912 0.361836    
-School3967   1.66461    1.20989   1.376 0.168918    
-School3992   4.37835    1.21067   3.616 0.000301 ***
-School3999   2.20023    1.25389   1.755 0.079351 .  
-School4042   2.72052    1.15799   2.349 0.018834 *  
-School4173   2.04960    1.26172   1.624 0.104324    
-School4223   4.25354    1.25401   3.392 0.000698 ***
-School4253   2.12821    1.19553   1.780 0.075095 .  
-School4292   5.32002    1.16133   4.581 4.71e-06 ***
-School4325   2.68983    1.20487   2.232 0.025616 *  
-School4350   1.44942    1.36713   1.060 0.289095    
-School4383   1.20770    1.48934   0.811 0.417454    
-School4410   2.54540    1.28559   1.980 0.047748 *  
-School4420   3.50200    1.37767   2.542 0.011044 *  
-School4458  -0.65723    1.24346  -0.529 0.597136    
-School4511   3.10776    1.18008   2.634 0.008469 ** 
-School4523   0.48065    1.25703   0.382 0.702198    
-School4530   0.65207    1.16078   0.562 0.574303    
-School4642   3.65857    1.16795   3.132 0.001741 ** 
-School4868   2.07256    1.35895   1.525 0.127274    
-School4931   2.41840    1.18265   2.045 0.040902 *  
-School5192   0.44779    1.43594   0.312 0.755166    
-School5404   3.14662    1.19193   2.640 0.008311 ** 
-School5619   3.78555    1.15074   3.290 0.001008 ** 
-School5640   2.69490    1.18454   2.275 0.022933 *  
-School5650   5.99356    1.26802   4.727 2.33e-06 ***
-School5667   2.52979    1.17033   2.162 0.030682 *  
-School5720   3.40872    1.20525   2.828 0.004694 ** 
-School5761   2.18376    1.21206   1.802 0.071637 .  
-School5762  -1.57144    1.33349  -1.178 0.238660    
-School5783   2.70143    1.42138   1.901 0.057399 .  
-School5815  -1.05273    1.48936  -0.707 0.479695    
-School5819   1.09015    1.22281   0.892 0.372685    
-School5838   2.66742    1.39200   1.916 0.055374 .  
-School5937   4.79482    1.42396   3.367 0.000763 ***
-School6074   3.61285    1.18905   3.038 0.002387 ** 
-School6089   4.59178    1.36611   3.361 0.000780 ***
-School6144  -0.73726    1.26868  -0.581 0.561173    
-School6170   4.64975    1.57797   2.947 0.003223 ** 
-School6291   2.46695    1.34948   1.828 0.067580 .  
-School6366   4.64099    1.18248   3.925 8.76e-05 ***
-School6397   3.32574    1.17220   2.837 0.004565 ** 
-School6415   1.52307    1.19922   1.270 0.204110    
-School6443   0.41647    1.40591   0.296 0.767066    
-School6464   0.49761    1.43300   0.347 0.728412    
-School6469   7.34482    1.19449   6.149 8.23e-10 ***
-School6484   2.62935    1.34209   1.959 0.050136 .  
-School6578   2.76137    1.18916   2.322 0.020255 *  
-School6600   1.10183    1.18961   0.926 0.354369    
-School6808   0.04589    1.26462   0.036 0.971056    
-School6816   5.01202    1.21099   4.139 3.53e-05 ***
-School6897   4.13698    1.23045   3.362 0.000777 ***
-School6990  -0.98150    1.22074  -0.804 0.421409    
-School7011   3.06475    1.36566   2.244 0.024854 *  
-School7101   1.75016    1.43621   1.219 0.223040    
-School7172   0.52084    1.27490   0.409 0.682896    
-School7232   2.24269    1.21022   1.853 0.063908 .  
-School7276   2.48153    1.20640   2.057 0.039726 *  
-School7332   3.66849    1.23607   2.968 0.003009 ** 
-School7341  -0.01415    1.21615  -0.012 0.990715    
-School7342   2.27919    1.18108   1.930 0.053678 .  
-School7345   1.23923    1.19096   1.041 0.298128    
-School7364   3.60242    1.26128   2.856 0.004301 ** 
-School7635   3.78111    1.21740   3.106 0.001905 ** 
-School7688   7.51748    1.20083   6.260 4.07e-10 ***
-School7697   4.40755    1.37942   3.195 0.001403 ** 
-School7734   1.85061    1.55413   1.191 0.233783    
-School7890  -1.16445    1.21525  -0.958 0.337993    
-School7919   3.22463    1.32435   2.435 0.014921 *  
-School8009   3.25372    1.24611   2.611 0.009044 ** 
-School8150   3.70841    1.26330   2.935 0.003341 ** 
-School8165   5.21531    1.22966   4.241 2.25e-05 ***
-School8175   3.06585    1.37103   2.236 0.025373 *  
-School8188   2.14217    1.40609   1.523 0.127680    
-School8193   6.50780    1.26927   5.127 3.02e-07 ***
-School8202   1.23146    1.34329   0.917 0.359305    
-School8357   3.88852    1.45173   2.679 0.007412 ** 
-School8367  -5.89349    1.83067  -3.219 0.001291 ** 
-School8477   2.48643    1.32121   1.882 0.059886 .  
-School8531   2.48687    1.28810   1.931 0.053567 .  
-School8627   0.36074    1.20589   0.299 0.764836    
-School8628   5.99134    1.16697   5.134 2.91e-07 ***
-School8707   2.67593    1.23640   2.164 0.030476 *  
-School8775   0.04408    1.23391   0.036 0.971501    
-School8800   0.08242    1.38495   0.060 0.952549    
-School8854  -4.54976    1.37794  -3.302 0.000965 ***
-School8857   5.64889    1.17050   4.826 1.42e-06 ***
-School8874   2.95601    1.33260   2.218 0.026571 *  
-School8946   0.40105    1.17956   0.340 0.733867    
-School8983   0.81257    1.21536   0.669 0.503782    
-School9021   2.97339    1.19459   2.489 0.012832 *  
-School9104   4.57053    1.20051   3.807 0.000142 ***
-School9158  -0.66014    1.20498  -0.548 0.583817    
-School9198   7.32167    1.39411   5.252 1.55e-07 ***
-School9225   3.60389    1.33320   2.703 0.006884 ** 
-School9292   3.52560    1.64597   2.142 0.032231 *  
-School9340   1.14429    1.41928   0.806 0.420128    
-School9347   2.56951    1.18623   2.166 0.030336 *  
-School9359   3.87856    1.20714   3.213 0.001319 ** 
-School9397  -0.34677    1.24142  -0.279 0.779999    
-School9508   3.61321    1.34255   2.691 0.007134 ** 
-School9550   0.77467    1.42057   0.545 0.585546    
-School9586   2.98814    1.18054   2.531 0.011390 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 6.01 on 7023 degrees of freedom
-Multiple R-squared:  0.2536,    Adjusted R-squared:  0.2365 
-F-statistic: 14.82 on 161 and 7023 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># interesting </span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># what does this mean.. 3 predictors...shows</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(MathAch <span class="sc">~</span> SES <span class="sc">+</span> Minority <span class="sc">+</span> School, <span class="at">data =</span> math)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(lm3)</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># undo above comment to go down the hole</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Does this mean that the model with SES + Minority is better for some schools?</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="co"># TO DO</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<section id="comments-6" class="level4">
-<h4 class="anchored" data-anchor-id="comments-6">Comments</h4>
-<ul>
-<li>Does this mean that the model with SES + Minority is better for some schools</li>
-</ul>
-</section>
 </section>
 <section id="compare-models" class="level3">
 <h3 class="anchored" data-anchor-id="compare-models">Compare models</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare standard 1 and 2 predictor models</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.comparison</span>(lm1, lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare standard 1 and 2 predictor models</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.comparison</span>(lm1, lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$statistics
          aic      bic bayes.factor      p   rsq
@@ -885,14 +747,14 @@ $predicted_differences
 0.051 0.565 0.886 1.472 3.236 </code></pre>
 </div>
 </div>
-<section id="comments-7" class="level4">
-<h4 class="anchored" data-anchor-id="comments-7">Comments</h4>
+<section id="comments-6" class="level4">
+<h4 class="anchored" data-anchor-id="comments-6">Comments</h4>
 <ul>
 <li>lm2 better than 1</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare the standard 2 predictor model with the MM with 2 predictors </span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.comparison</span>(lm2, mod_ses_minority)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare the standard 2 predictor model with the MM with 2 predictors </span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">model.comparison</span>(lm2, mod_ses_minority)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$statistics
                       aic      bic bayes.factor
@@ -905,8 +767,8 @@ $predicted_differences
 </div>
 </div>
 </section>
-<section id="comments-8" class="level4">
-<h4 class="anchored" data-anchor-id="comments-8">Comments</h4>
+<section id="comments-7" class="level4">
+<h4 class="anchored" data-anchor-id="comments-7">Comments</h4>
 <ul>
 <li>MM better than standard 2 predictor variable model?</li>
 </ul>
