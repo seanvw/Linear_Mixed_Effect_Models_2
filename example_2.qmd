@@ -237,7 +237,7 @@ ggplot(data = math, aes(x = SES, y = MathAch)) +
   geom_line(color='red',linewidth=0.1, data = predicted_df, aes(x=SES, y=MathArc_pred))
 ```
 
-### Down the rabbit hole
+### 3 Predictors
 
 ```{r}
 # interesting 
@@ -250,7 +250,18 @@ lm3 <- lm(MathAch ~ SES + Minority + School, data = math)
 # TO DO
 ```
 
-### Compare models
+```{r}
+# 3 predictors
+lm3 <- lm(MathAch ~ SES + Minority + MEANSES, data = math)
+summary(lm3)
+predicted_df <- data.frame(MathArc_pred = predict(lm3, math), SES=math$SES)
+# this is the predicted line of multiple linear regression
+ggplot(data = math, aes(x = SES, y = MathAch)) + 
+  geom_point(color='blue',size=0.1) +
+  geom_line(color='red',linewidth=0.1, data = predicted_df, aes(x=SES, y=MathArc_pred))
+```
+
+## Compare models
 
 ```{r}
 # compare standard 1 and 2 predictor models
@@ -259,7 +270,16 @@ model.comparison(lm1, lm2)
 
 #### Comments
 
--   lm2 better than 1
+-   lm2 better than lm1
+
+```{r}
+# compare 2 and 3 predictor models
+model.comparison(lm2, lm3)
+```
+
+#### Comments
+
+-   lm3 better than lm2
 
 ```{r}
 # compare the standard 2 predictor model with the MM with 2 predictors 
@@ -269,3 +289,12 @@ model.comparison(lm2, mod_ses_minority)
 #### Comments
 
 -   MM better than standard 2 predictor variable model?
+
+```{r}
+# compare the standard 3 predictor model with the MM with 2 predictors 
+model.comparison(lm3, mod_ses_minority)
+```
+
+#### Comments
+
+-   MM still better than standard 3 predictor variable model?
