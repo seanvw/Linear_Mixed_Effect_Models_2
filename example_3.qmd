@@ -1,0 +1,121 @@
+---
+title: "Example #3"
+---
+
+## Introduction
+
+Look into Intra Class Correlation (ICC)
+
+What proportion of variability (variance) in the model is due to cluster effects
+
+## Example #3
+
+```{r}
+require(flexplot)
+require(lme4)
+require(dplyr)
+#require(ggplot2)
+```
+
+## Fit a baseline and compute ICC
+
+```{r}
+data(math)
+baseline <- lmer(MathAch~1 + (1|School), data=math) 
+# ICC is var(school)/ ( var(school) + var(person) ) 
+# e.g. when school and person vars are equal ICC is 0.5
+# Increasing person var relative to school pushes toward 1 
+# ICC runs 0 to 1
+# ICC = 0 means perfectly independant 
+# rising ICC towards 1 (or 100%) is towards non-independant
+# This function extracts the necessary variances from the mixed model and computes ICC.
+# Digging in the icc() function one can see it uses lme4 function VarrCorr to get variances.
+#
+# VarCorr {lme4} Extract Variance and Correlation Components
+# This function calculates the estimated variances, standard deviations, and correlations 
+# between the random-effects terms in a mixed-effects model, of class merMod (linear, 
+# generalized or nonlinear). The within-group error variance and standard deviation are also # calculated.
+#
+# Digging: In this case try, 
+# str(as.data.frame(VarCorr(baseline))
+# grp  : chr  "School" "Residual"
+# ..
+# vcov : num  8.61 39.15
+# 
+# ICC is ~ 8.61 / (8.61 + 39.15) = 0.1802764
+# vcov is "variances or covariances"
+# Using MathAch var by school from model fit
+# calculating directly, gives  different numbers
+# grp_school <- math %>% group_by(School) %>% summarise(mean_MathAch = mean(MathAch)) 
+# var(grp_school$mean_MathAch) 
+# 9.71975
+# var(math$MathAch)
+# 47.31026
+# 
+# so, perhaps ICC in this case is better expressed as..understood by me as...
+# from the model fit
+# var(MathAch by school)/ ( var(MathAch by school) + var(MathAch disregarding School) ) 
+
+icc(baseline) 
+visualize(baseline, plot="model")
+
+```
+
+#### Comments
+
+-   18% cluster effects
+-   my plot doesn't show the random effects despite the model being identical to DFs
+
+```{r}
+fixed_slopes <- lmer(MathAch~SES + (1|School), data=math)
+visualize(fixed_slopes, plot="model")
+```
+
+```{r}
+random_slopes <- lmer(MathAch~SES + (SES|School), data=math)
+visualize(random_slopes, plot="model")
+```
+
+```{r}
+# see 8 schools, 2 at a time 
+compare.fits(MathAch~SES | School, data=math, fixed_slopes, random_slopes, clusters = 2)
+compare.fits(MathAch~SES | School, data=math, fixed_slopes, random_slopes, clusters = 2)
+compare.fits(MathAch~SES | School, data=math, fixed_slopes, random_slopes, clusters = 2)
+compare.fits(MathAch~SES | School, data=math, fixed_slopes, random_slopes, clusters = 2)
+```
+
+```{r}
+# 
+model.comparison(fixed_slopes, baseline)
+model.comparison(random_slopes, baseline)
+model.comparison(fixed_slopes, random_slopes)
+# fixed_slopes is probably better
+summary(fixed_slopes)
+
+```
+
+```{r}
+# genrally categorical vars are fixed effects
+with_minority =  lmer(MathAch~SES + Minority + (SES|School), data=math)
+compare.fits(MathAch~SES | Minority + School, data=math, with_minority, fixed_slopes)
+model.comparison(with_minority, fixed_slopes)
+
+summary(with_minority)
+```
+
+#### Comments
+
+-   **Akaike information criterion** (**AIC**)
+
+-   **Bayesian information criterion** (**BIC**) or **Schwarz information criterion** (also **SIC**, **SBC**, **SBIC**)
+
+-   Looking at summary(with_minority), the model parameters are pretty similar to Example #2 - the standard linear model (lm2 \<- lm(MathAch \~ SES + Minority, data = math))
+
+```{r}
+# software library update
+# estimates() has become available
+
+# explain of dessign.effect - artificail infaltion 
+estimates(with_minority)
+
+```

@@ -2,4 +2,4 @@
 title: "Linear Mixed-Effect Models"
 ---
 
-Some reference examples of Linear Mixed-Effect Models (LMMs or just MMs for short) otherwise known as Hierarchical Linear Models (HLMs) or Multi Level Models.
+Some reference examples of Linear Mixed-Effect Models (LMMs or just MMs for short) otherwise known as Hierarchical Linear Models (HLMs) or Multi Level Models. Used when the assumption of independence is broken and General Linear Models are no longer appropriate. Independence broken when same samples are measured multiple times (time course e.g. when alcohol use is measured each year within a fixed group of subjects) or when samples are correlated (clusters e.g. family members are likely not independent with respect to religious faith)
