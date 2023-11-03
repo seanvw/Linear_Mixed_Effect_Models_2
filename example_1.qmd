@@ -4,7 +4,7 @@ title: "Example #1"
 
 ## Introduction
 
-Some examples of using "flexplot" and "lmer" based on explanations from Dustin Fife ([Video Link](https://www.youtube.com/watch?v=eVuQlGDZxHs&list=PL8F480DgtpW9_IT7xN1XeRF_dglZmK0nM&index=2)). Modified with tidyverse packages and plots (ggplot) to enable additional data understanding. My annotations and observations in line with code. Wrapped up in a Quarto package.
+Some examples of using "flexplot" and "lmer" based on the excellent explanations from Dustin Fife ([Video Link](https://www.youtube.com/watch?v=eVuQlGDZxHs&list=PL8F480DgtpW9_IT7xN1XeRF_dglZmK0nM&index=2)). Modified with tidyverse packages and plots (ggplot) to enable additional data understanding. My annotations and observations in line with code. Wrapped up in a Quarto package.
 
 ## Example #1
 

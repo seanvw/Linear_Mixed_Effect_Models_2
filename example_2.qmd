@@ -4,7 +4,7 @@ title: "Example #2"
 
 ## Introduction
 
-Compare models with data set 'math'. Apart from the regular flow from DF, added are sections on data set understanding together with a delve into using regular GLM (General not Generalized!) and some funky vizualisations of multifactorial models.
+Compare models with the data set 'math'. Apart from the regular flow from DF, sections have been added on data set understanding together with a delve into regular GLM (General not Generalized!) and some funky visualizations of multi-factorial models.
 
 ## Example #2
 

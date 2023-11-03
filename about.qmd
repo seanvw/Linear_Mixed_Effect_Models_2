@@ -2,4 +2,4 @@
 title: "About"
 ---
 
-Reference examples from the excellent teachings of Dustin Fife and other sources to inspire my own work and teachings ([About me](https://seanvw.github.io/seanvw/about.html "About me"))
+[About me](https://seanvw.github.io/seanvw/about.html "About me")
